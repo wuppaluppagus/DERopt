@@ -11,12 +11,12 @@ opt_now_yalmip = 0; %YALMIP
 elec_dump = []; %%%Variable to "dump" electricity
 %% Diesel Only Toggles
 utility_exists=[]; %% Utility access
-pv_on = 1;        %Turn on PV
+pv_on = 0;        %Turn on PV
 ees_on = 0;       %Turn on EES/REES
 rees_on = 0;  %Turn on REES
 ror_on = 0; % Turn On Run of river generator
-ror_integer_on = 0;
-ror_integer_cost = 2000;
+ror_integer_on = 1;
+ror_integer_cost = 8000;
 pemfc_on = 0;
 %%%Hydrogen technologies
 el_on = 0; %Turn on generic electrolyer
@@ -57,18 +57,18 @@ addpath(genpath('C:\Users\typde\Downloads\Lab docs\APEP\Yalmip\YALMIP-master'))
 % addpath(genpath('C:\Program Files\IBM\ILOG\CPLEX_Studio1263\cplex\matlab\x64_win64')) %cyc path
 
 %%%DERopt paths
-addpath(genpath('C:\Users\typde\Downloads\Lab docs\APEP\DERopt\Design'))
-addpath(genpath('C:\Users\typde\Downloads\Lab docs\APEP\DERopt\Input_Data'))
-addpath(genpath('C:\Users\typde\Downloads\Lab docs\APEP\DERopt\Load_Processing'))
-addpath(genpath('C:\Users\typde\Downloads\Lab docs\APEP\DERopt\Post_Processing'))
-addpath(genpath('C:\Users\typde\Downloads\Lab docs\APEP\DERopt\Problem_Formulation_Single_Node'))
-addpath(genpath('C:\Users\typde\Downloads\Lab docs\APEP\DERopt\Techno_Economic'))
-addpath(genpath('C:\Users\typde\Downloads\Lab docs\APEP\DERopt\Utilities'))
-addpath(genpath('C:\Users\typde\Downloads\Lab docs\APEP\DERopt\Igiugig'))
+addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Design'))
+addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Input_Data'))
+addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Load_Processing'))
+addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Post_Processing'))
+addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Problem_Formulation_Single_Node'))
+addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Techno_Economic'))
+addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Utilities'))
+addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Igiugig'))
 
 %% Loading building demand
 %%%Loading Data
-dt = readtable('C:\Users\typde\Downloads\Lab docs\APEP\DERopt\Igiugig\Igiugig\Igiugig_Load_Growth_added_time.csv');
+dt = readtable('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Igiugig\Igiugig\Igiugig_Load_Growth_added_time.csv');
 
 time = datenum(dt.Date);
 elec = dt.ElectricDemand_kW_;

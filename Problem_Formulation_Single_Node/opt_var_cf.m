@@ -99,15 +99,16 @@ if rsoc_on
     var_rsoc.rsoc_fuel_cell = sdpvar(T, size(rsoc_v, 2), 'full');
     var_rsoc.rsoc_fc_onoff = binvar(T, size(rsoc_v, 2), 'full');
     var_rsoc.rsoc_e_onoff = binvar(T, size(rsoc_v, 2), 'full');
+    var_rsoc.e_start = binvar(T, size(rsoc_v, 2), 'full');
 
     Fuel_Cell_OaM = .5*rsoc_monthly_debt;
     Electrolyzer_OaM = Fuel_Cell_OaM;
-    start_cost = 5;
+    start_cost = 2;
 
     Objective = Objective ...
-        + sum(M*(rsoc_monthly_debt+Fuel_Cell_OaM+Electrolyzer_OaM).*4*var_rsoc.rsoc_capacity+start_cost*(sum(var_rsoc.rsoc_fc_onoff)+sum(var_rsoc.rsoc_e_onoff)));
+        + sum(M*(Fuel_Cell_OaM+Electrolyzer_OaM).*4*var_rsoc.rsoc_capacity+start_cost*sum(var_rsoc.e_start));
 
-    
+    % start_cost*(sum(var_rsoc.rsoc_fc_onoff)+sum(var_rsoc.rsoc_e_onoff))
 end
 %% Solar PV
 if pv_on 
