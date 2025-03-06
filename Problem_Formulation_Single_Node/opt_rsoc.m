@@ -10,10 +10,10 @@ Constraints = [Constraints
     % (var_rsoc.rsoc_electrolyzer <= rsoc_v(1)*var_rsoc.rsoc_capacity):'RSOC Electrolyzer Energy Balance'
     
     (var_rsoc.rsoc_fuel_cell <= max(elec)*var_rsoc.rsoc_fc_onoff): 'Fuel Cell Contraint'
-    (.05*var_rsoc.rsoc_capacity - max(elec)*(1-var_rsoc.rsoc_fc_onoff) <= var_rsoc.rsoc_fuel_cell): 'Fuel Cell Constraint'
+    (.5*var_rsoc.rsoc_capacity - max(elec)*(1-var_rsoc.rsoc_fc_onoff) <= var_rsoc.rsoc_fuel_cell): 'Fuel Cell Constraint'
     
     (var_rsoc.rsoc_electrolyzer<= max(elec)*(var_rsoc.rsoc_e_onoff)): 'Electrolyzer Contraint'
-    (.05*var_rsoc.rsoc_capacity - max(elec)*(1-var_rsoc.rsoc_e_onoff) <= var_rsoc.rsoc_electrolyzer): 'Electrolyzer Constraint'
+    (.5*var_rsoc.rsoc_capacity - max(elec)*(1-var_rsoc.rsoc_e_onoff) <= var_rsoc.rsoc_electrolyzer): 'Electrolyzer Constraint'
     
     (var_rsoc.rsoc_fc_onoff + var_rsoc.rsoc_e_onoff <=1): 'Onoff constraint'
 
