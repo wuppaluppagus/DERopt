@@ -77,7 +77,7 @@ cool = [];
 
 %%% Formatting Building Data
 %%%Values to filter data by
-month_idx = [];
+month_idx = [2, 3, 8, 9];
 
 
 

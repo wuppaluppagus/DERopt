@@ -50,7 +50,8 @@ datetimev=datevec(time);
 
 % idx = (datetimev(:,1) == year_idx & datetimev(:,2) == month_idx);
 if ~isempty(month_idx)
-    idx = (datetimev(:,2) == month_idx );
+    idx = (datetimev(:,2) == month_idx);
+    idx = find(sum(idx(:, 1), 2)==1);
     elec = elec(idx);
     solar = solar(idx,:);
     river_power_potential = river_power_potential(idx,:);

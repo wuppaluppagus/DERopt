@@ -103,12 +103,13 @@ if rsoc_on
 
     Fuel_Cell_OaM = .5*rsoc_monthly_debt;
     Electrolyzer_OaM = Fuel_Cell_OaM;
-    start_cost = 2;
+    start_cost = 50;
 
     Objective = Objective ...
-        + sum(M*(Fuel_Cell_OaM+Electrolyzer_OaM).*4*var_rsoc.rsoc_capacity+start_cost*sum(var_rsoc.e_start));
+        + sum(M*(Fuel_Cell_OaM+Electrolyzer_OaM).*4*var_rsoc.rsoc_capacity);
 
     % start_cost*(sum(var_rsoc.rsoc_fc_onoff)+sum(var_rsoc.rsoc_e_onoff))
+    % +start_cost*sum(var_rsoc.e_start)
 end
 %% Solar PV
 if pv_on 
