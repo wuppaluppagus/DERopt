@@ -1,6 +1,6 @@
 
 e_ramprate = rsoc_v(end);
-
+a = 10;
 if rsoc_on
 max_switch = 10;
 
@@ -20,12 +20,6 @@ Constraints = [Constraints
     (var_rsoc.rsoc_e_onoff(2:end) - var_rsoc.rsoc_e_onoff(1:end-1) <= var_rsoc.e_start(2:end)): 'start constraint'
     (var_rsoc.rsoc_fc_onoff(2:end) - var_rsoc.rsoc_fc_onoff(1:end-1) <= var_rsoc.e_start(2:end)): 'start constraint'
 
-
-    %%% NEW CONSTRAINT
-    % (sum(var_rsoc.e_onoff(t:t+a))+sum(var_rsoc.fc_onoff(t:t+a)) == a*var_rsoc.e_start(t)): 'start constraint'
-
-
-
     % (0<=var_rsoc.e_start):'start constraint'
         
     % (-rsoc_v(6)*rsoc_v(1)*var_rsoc.rsoc_capacity <= var_rsoc.rsoc_fuel_cell(2:end) - var_rsoc.rsoc_fuel_cell(1:end-1) <= rsoc_v(6)*rsoc_v(1)*var_rsoc.rsoc_capacity+.1*rsoc_v(1)*var_rsoc.e_start(2, end)):'RSOC Fuel Cell Ramp Rate'
@@ -37,6 +31,14 @@ Constraints = [Constraints
     % ((var_rsoc.rsoc_e_onoff(2:end) - var_rsoc.rsoc_e_onoff(1:end-1))+(var_rsoc.rsoc_fc_onoff(2:end) - var_rsoc.rsoc_fc_onoff(1:end-1)) <= var_rsoc.e_start(2:end)): 'start constraint'
 
     ];
+
+   
+    for i = 2:(T-a)
+        
+        Constraints = [Constraints
+            (a*(var_rsoc.e_start(i)) <= sum(var_rsoc.rsoc_fc_onoff(i+1:i+a)+var_rsoc.rsoc_e_onoff(i+1:i+a))): 'Min-time constraints'
+        ];
+    end
 end 
 
 %rsoc_v(6) = .8

@@ -256,3 +256,18 @@ if opt_now
     %% Finding Lambda Values
 
 end
+
+%% Temp Plots
+
+figure
+plot(value(var_rsoc.rsoc_fuel_cell))
+
+hold on
+
+plot(value(var_rsoc.rsoc_electrolyzer))
+legend('fuel cell', 'electrolyzer')
+hold off
+
+figure 
+
+plot(value(var_rsoc.rsoc_e_onoff)+value(var_rsoc.rsoc_fc_onoff))
