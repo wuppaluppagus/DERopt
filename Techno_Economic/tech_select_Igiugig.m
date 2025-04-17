@@ -177,9 +177,9 @@ if rsoc_on
     
     max_output = 1;  % Max power output in kW
     
-    % [1 -max_output, 2 - fuel_cell_efficiency, 3 - electrolyzer_efficiency, 4 - OaM, 5 - Capital, 61.1.5 - Ramp Rate, 7 - Current Density, 8 - Voltage for Fuel Cell, 9 - Voltage for Electrolyzer, 10 - Ramp Rate for Electrolyzer]
+    % [1 -max_output, 2 - fuel_cell_efficiency, 3 - electrolyzer_efficiency, 4 - OaM, 5 - Capital, 6 - Ramp Rate, 7 - Current Density, 8 - Voltage for Fuel Cell, 9 - Voltage for Electrolyzer, 10 - Ramp Rate for Electrolyzer]
 
-    rsoc_v = [max_output, .7, .7, 100, 1000, .2, 2, 1.1, 1.5, .5]';
+    rsoc_v = [max_output, 1, 1, .1, 1000, .2, 2, 1.1, 1.5, .5]';
 end
 
 %% Building space

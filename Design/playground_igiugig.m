@@ -79,7 +79,7 @@ cool = [];
 %%%Values to filter data by
 month_idx = [2, 3, 8, 9];
 
-
+% month_idx=[];
 
 % month_idx = [2];
 % month_idx = [9];
@@ -265,9 +265,38 @@ plot(value(var_rsoc.rsoc_fuel_cell))
 hold on
 
 plot(value(var_rsoc.rsoc_electrolyzer))
-legend('fuel cell', 'electrolyzer')
+
+
+title('Energy Production vs. Time')
+legend('Fuel Cell', 'Electrolyzer')
+ylabel('Energy Produced [kWh]')
+xlabel('Time')
+
+hold off
+
+figure
+fill(1:length(var_rsoc.rsoc_e_onoff), value(var_rsoc.rsoc_fuel_cell), 'blue')
+
+hold on
+
+fill(1:length(var_rsoc.rsoc_electrolyzer), value(var_rsoc.rsoc_electrolyzer), [0.9290 0.6940 0.1250])
+
+title('Energy Production vs. Time')
+legend('Fuel Cell', 'Electrolyzer')
+ylabel('Energy Produced [kWh]')
+xlabel('Time')
+
 hold off
 
 figure 
 
-plot(value(var_rsoc.rsoc_e_onoff)+value(var_rsoc.rsoc_fc_onoff))
+fill(1:length(var_rsoc.rsoc_e_onoff), value(var_rsoc.rsoc_e_onoff)+value(var_rsoc.rsoc_fc_onoff), 'blue')
+
+hold on
+
+title("On-Off State of System- Combined")
+ylabel('State- Bin')
+xlabel('Time')
+
+hold off
+
