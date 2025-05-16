@@ -9,7 +9,7 @@ if opt_now==1
     model.lb(:) = 0;
 
 params.NodeLimit = 30000;
-params.NodeLimit = 20000;
+params.NodeLimit = 200000;
 params.OutputFlag = 1;
 % params.StartNumber = solution.x;
 solution = gurobi(model,params)

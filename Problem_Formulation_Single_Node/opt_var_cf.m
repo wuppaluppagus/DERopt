@@ -103,10 +103,10 @@ if rsoc_on
 
     % Fuel_Cell_OaM = .5*rsoc_monthly_debt;
     % Electrolyzer_OaM = Fuel_Cell_OaM;
-    % start_cost = 50;
+    start_cost = 50;
 
     Objective = Objective ...
-    + sum(M*(rsoc_monthly_debt).*4*var_rsoc.rsoc_capacity) + sum(rsoc_v(4)*(var_rsoc.rsoc_fuel_cell+var_rsoc.rsoc_electrolyzer));
+    + sum(M*(rsoc_monthly_debt).*4*var_rsoc.rsoc_capacity) + sum(rsoc_v(4)*(var_rsoc.rsoc_fuel_cell+var_rsoc.rsoc_electrolyzer))+start_cost*sum(var_rsoc.e_start);
 
     % Objective = Objective ...
     %     + sum(M*(Fuel_Cell_OaM+Electrolyzer_OaM).*4*var_rsoc.rsoc_capacity);

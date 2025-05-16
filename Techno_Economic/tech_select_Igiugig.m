@@ -179,7 +179,7 @@ if rsoc_on
     
     % [1 -max_output, 2 - fuel_cell_efficiency, 3 - electrolyzer_efficiency, 4 - OaM, 5 - Capital, 6 - Ramp Rate, 7 - Current Density, 8 - Voltage for Fuel Cell, 9 - Voltage for Electrolyzer, 10 - Ramp Rate for Electrolyzer]
 
-    rsoc_v = [max_output, 1, 1, .1, 1000, .2, 2, 1.1, 1.5, .5]';
+    rsoc_v = [max_output, 1, 1, .01, 1000, .9, 2, 1.1, 1.5, .8]';
 end
 
 %% Building space
