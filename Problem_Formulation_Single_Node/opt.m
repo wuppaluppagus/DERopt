@@ -1,18 +1,72 @@
-
 %% Optimize thru CPLEX
 if opt_now==1
     
     % Export Model YALMIP -> CPLEX
     tic
-    [model,recoverymodel,diagnostic,internalmodel] = export(Constraints,Objective,sdpsettings('solver','gurobi'));
-    % [model,recoverymodel,diagnostic,internalmodel] = export(Constraints,Objective);
-    model.lb(:) = 0;
+ops = sdpsettings('solver','gurobi','verbose',1);
+ops.gurobi.NonConvex = 2;
+ops.gurobi.TuneTimeLimit = 0;
+ops.gurobi.TimeLimit = 60;
 
-params.NodeLimit = 30000;
-params.NodeLimit = 200000;
-params.OutputFlag = 1;
-% params.StartNumber = solution.x;
-solution = gurobi(model,params)
+
+
+if isempty(rsoc_v) == 0
+
+    Constraints = [Constraints
+
+    0 <= var_rsoc.rsoc_electrolyzer <= 999
+    0 <= var_rsoc.rsoc_capacity <= 999
+    0 <= var_rsoc.rsoc_fuel_cell <=999
+    0 <= var_rsoc.rsoc_fc_onoff 
+    0 <= var_rsoc.rsoc_e_onoff 
+    0 <= var_rsoc.e_start 
+
+    0 <= var_rsoc.objective <= 1e3
+    ];
+end
+
+sol = optimize(Constraints,Objective,ops)
+
+% if isempty(pv_v) ==0
+%   Constraints=[Constraints
+%             0 <= pv_elec
+%             0 <= pv_nem
+%             0 <= pv_wholesale
+%             0 <= pv_adopt <= 99999 %Big M limits
+%  %           3 <= pv_adopt <= 99999 % Limits for semivar
+%             ];
+% end
+% 
+% if isempty(ees_v) ==0
+%   Constraints=[Constraints
+%             0 <= rees_adopt <= 99999 %Big M limits
+% %            13.5 <= rees_adopt <= 99999 %Limits for semivar
+%             0 <= rees_chrg
+%             0 <= rees_dchrg
+%             0 <= rees_dchrg_nem
+%             0 <= rees_soc 
+%             0 <= ees_adopt <= 99999 %Big M limits
+% %            13.5 <= ees_adopt <= 99999 %Limits for semivar
+%             0 <= ees_chrg
+%             0 <= ees_dchrg
+%             0 <= ees_soc
+%             ];
+% end 
+% 
+
+
+% asd
+
+
+    % [model,recoverymodel,diagnostic,internalmodel] = export(Constraints,Objective,sdpsettings('solver','gurobi'));
+    % [model,recoverymodel,diagnostic,internalmodel] = export(Constraints,Objective);
+    % model.lb(:) = 0;
+
+% params.NodeLimit = 30000;
+% params.NodeLimit = 200000;
+% params.OutputFlag = 1;
+% % params.StartNumber = solution.x;
+% solution = gurobi(model,params)
 
 
     %%%Setting lower/upper bounds for all variables
@@ -32,8 +86,8 @@ solution = gurobi(model,params)
 %     if length(model.f) ~= length(x)
 %         x = [];
 %     end
-    fprintf('%s Starting CPLEX Solver \n', datestr(now,'HH:MM:SS'))
-    tic
+    % fprintf('%s Starting CPLEX Solver \n', datestr(now,'HH:MM:SS'))
+    % tic
     
 %         [x, fval, exitflag, output, lambda] = cplexlp(model.f, model.Aineq, model.bineq, model.Aeq, model.beq, lb, ub, [], options);
 %     if sum(strfind(model.ctype,'B')>0) + sum(strfind(model.ctype,'I')>0)
@@ -59,7 +113,9 @@ solution = gurobi(model,params)
     
     % Recovering data and assigning to the YALMIP variables
     % assign(recover(recoverymodel.used_variables),x)
-    assign(recover(recoverymodel.used_variables),solution.x)
+
+
+    % assign(recover(recoverymodel.used_variables),solution.x)
 end
 %% Optimize thru YALMIP
 if opt_now_yalmip==1  
@@ -112,6 +168,7 @@ if opt_now_yalmip==1
     max_nodes = 60000;
     ops.cplex.MaxNodes=max_nodes;
     ops.cplex.mip.limits.nodes=max_nodes;
+    ops.gurobi.NonConvex = 2;
     
     %Optimize!
     sol = optimize(Constraints,Objective,ops)

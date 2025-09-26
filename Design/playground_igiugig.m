@@ -1,7 +1,8 @@
 %% Playground file for OVMG Project
-clear all; close all; clc ; started_at = datetime('now'); startsim = tic;
-
+ clear all; close all; clc ; started_at = datetime('now'); startsim = tic;
 %% Parameters
+
+parameter_sweep_onoff = 0;
 
 %%% opt.m parameters
 %%%Choose optimizaiton solver 
@@ -11,12 +12,12 @@ opt_now_yalmip = 0; %YALMIP
 elec_dump = []; %%%Variable to "dump" electricity
 %% Diesel Only Toggles
 utility_exists=[]; %% Utility access
-pv_on = 0;        %Turn on PV
+pv_on = 1;        %Turn on PV
 ees_on = 0;       %Turn on EES/REES
 rees_on = 0;  %Turn on REES
 ror_on = 0; % Turn On Run of river generator
 ror_integer_on = 1;
-ror_integer_cost = 200000;
+ror_integer_cost = 9000;
 pemfc_on = 0;
 %%%Hydrogen technologies
 el_on = 0; %Turn on generic electrolyer
@@ -77,7 +78,7 @@ cool = [];
 
 %%% Formatting Building Data
 %%%Values to filter data by
-month_idx = [2, 3, 8, 9];
+month_idx = [1, 2, 3, 4, 5];
 
 % month_idx=[];
 
@@ -243,7 +244,7 @@ if opt_now
 
 
     %% Metrics
-    lcoe = solution.objval/sum(elec);
+    % lcoe = solution.objval/sum(elec);
     % co2_emisisons = sum(var_legacy_diesel_binary.electricity).*(1./ldiesel_binary_v(2,:)) ...
     %     .*(3.6) ... %%% Convert from kWh to MJ
     %     .*(1/135.6) ... %%% Convert from MJ to Gallons diesel fuel
@@ -268,42 +269,42 @@ energy_prod_rsoc = value(var_rsoc.rsoc_fuel_cell)-value(var_rsoc.rsoc_electrolyz
 
 energy_prod_refine = interp1(1:length(energy_prod_rsoc), energy_prod_rsoc, linspace(1, length(energy_prod_rsoc), length(energy_prod_rsoc)*100));
 
-%% Temp Plots
-
-Figure1 = figure;
-
-area(1:length(energy_prod_refine), energy_prod_refine.*(energy_prod_refine >= 0))
-
-hold on
-
-area(1:length(energy_prod_refine), energy_prod_refine.*(energy_prod_refine <= 0))
-
-title('Energy Production vs. Time')
-legend('Fuel Cell', 'Electrolyzer')
-ylabel('Energy Produced [kWh]')
-xlabel('Time')
-
-hold off
-
-fig1 = gca;
-exportgraphics(fig1, "Figure1.png", Resolution=600)
-
-figure
-area(1:length(var_rsoc.rsoc_e_onoff), value(var_rsoc.rsoc_fuel_cell), EdgeColor = "#0072BD")
-
-hold on
-
-area(1:length(var_rsoc.rsoc_electrolyzer), -value(var_rsoc.rsoc_electrolyzer), EdgeColor="#D95319")
-
-title('Energy Production vs. Time')
-legend('Fuel Cell', 'Electrolyzer')
-ylabel('Energy Produced [kWh]')
-xlabel('Time')
-
-hold off
-
-
-
+% %% Temp Plots
+% 
+% Figure1 = figure;
+% 
+% area(1:length(energy_prod_refine), energy_prod_refine.*(energy_prod_refine >= 0))
+% 
+% hold on
+% 
+% area(1:length(energy_prod_refine), energy_prod_refine.*(energy_prod_refine <= 0))
+% 
+% title('Energy Production vs. Time')
+% legend('Fuel Cell', 'Electrolyzer')
+% ylabel('Energy Produced [kWh]')
+% xlabel('Time')
+% 
+% hold off
+% 
+% fig1 = gca;
+% exportgraphics(fig1, "ADJ_Values_RSOC.png", Resolution=600)
+% 
+% figure
+% area(1:length(var_rsoc.rsoc_e_onoff), value(var_rsoc.rsoc_fuel_cell), EdgeColor = "#0072BD")
+% 
+% hold on
+% 
+% area(1:length(var_rsoc.rsoc_electrolyzer), -value(var_rsoc.rsoc_electrolyzer), EdgeColor="#D95319")
+% 
+% title('Energy Production vs. Time')
+% legend('Fuel Cell', 'Electrolyzer')
+% ylabel('Energy Produced [kWh]')
+% xlabel('Time')
+% 
+% hold off
+% 
+% 
+% 
 % figure 
 % 
 % area(1:length(var_rsoc.rsoc_e_onoff), value(var_rsoc.rsoc_fc_onoff)-value(var_rsoc.rsoc_e_onoff), EdgeColor = "#0072BD")
@@ -315,8 +316,8 @@ hold off
 % 
 % hold off
 % 
-
-
+% 
+% 
 % figure
 % 
 % area(value(var_pem.elec), EdgeColor = "#0072BD")
@@ -328,120 +329,141 @@ hold off
 % xlabel('Time')
 % 
 % hold off
-
-
-%% Extra Plots and Data formatting
-
-if isempty(var_el_binary.el_prod) | isempty(el_binary_eff)
-
-    var_el_binary.el_prod = zeros(length(var_rsoc.rsoc_electrolyzer), 1);
-    el_binary_eff = 0;
-end
-
-prods = [value(var_util.import), value(var_legacy_diesel.electricity), ...
-value(var_pv.pv_elec), value(var_ees.ees_dchrg), ...
-value(var_lees.ees_dchrg), value(var_rees.rees_dchrg), ...
-value(var_ldg.ldg_elec), value(var_legacy_diesel_binary.electricity), ...
-value(var_lbot.lbot_elec), value(var_run_of_river.electricity), ...
-value(var_pem.elec), value(var_ror_integer.elec(:, 1)), ...
-value(var_wave.electricity), value(var_rsoc.rsoc_fuel_cell)];
-
-consums = [value(var_util.gen_export+ var_hrs.hrs_supply.*hrs_chrg_eff + var_dump.elec_dump+elec), value(var_ees.ees_chrg), value(var_lees.ees_chrg), value(var_vc.generic_cool./4), ...
-value(var_lvc.lvc_cool.*vc_cop), value(el_binary_eff.*var_el_binary.el_prod), value(el_eff.*var_el.el_prod), value(h2_chrg_eff.*var_h2es.h2es_chrg), ...
-value(var_rsoc.rsoc_electrolyzer)];
-
-prods_nonempty = sum(prods, 1) ~= 0;
-consums_nonempty = sum(consums, 1) ~= 0;
-
-prods_legends = ["Imported", "Legacy Diesel", "PV", "EES", "LEES", "REES", "LDG", "Legacy Diesel Binary", "LBOT", "ROR", "PEM", "ROR-INT", "Wave", "RSOC-FC"];
-
-consums_legends = ["Background", "EES", "LEES", "VC", "LVC", "EL_Binary", "EL", "H2_CHRG", "RSOC-E"];
-
-% STANDARD
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Figure2 = figure;
-t2 = tiledlayout(2, 1);
-
-
-nexttile
-
-area(prods(:, prods_nonempty))
-hold on
-
-plot(sum(consums, 2), LineWidth= 1, Color="Black")
-
-title("Energy Production")
-p_actual_l = prods_legends(prods_nonempty);
-legend(p_actual_l)
-ylabel('Energy Produced [kWh]')
-xlabel('Time [h]')
-
-hold off
-
-
-
-nexttile
-
-area(consums(:, consums_nonempty))
-
-hold on
-
-title("Energy Consumption");
-c_actual_l = consums_legends(consums_nonempty);
-legend(c_actual_l)
-ylabel('Energy Consumed [kWh]')
-xlabel('Time [h]')
-hold off
-
-fig2 = gca;
-% NORMALIZED
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Figure3 = figure;
-t3 = tiledlayout(2, 1);
-
-nexttile
-
-Norm_prod = zeros(size(prods));
-Norm_consum = zeros(size(consums));
-
-for i = 1:length(prods)
-    tot_prod = sum(prods, 2);
-    Norm_prod(i, :) = prods(i, :)./tot_prod(i);
-
-    tot_consum = sum(consums, 2);
-    Norm_consum(i, :) = consums(i, :)./tot_consum(i);
-end
-
-area(Norm_prod)
-
-hold on
-
-title("Energy Production -- Percentage")
-p_actual_l = prods_legends(prods_nonempty);
-legend(p_actual_l)
-ylabel('Proportion')
-xlabel('Time [h]')
-
-
-hold off
-
-nexttile
-
-area(Norm_consum)
-
-hold on
-
-title("Energy Consumption - Percentage");
-c_actual_l = consums_legends(consums_nonempty);
-legend(c_actual_l)
-ylabel('Proportion')
-xlabel('Time [h]')
-hold off
-
-fig3 = gca;
-
-
-
-exportgraphics(t2, "Figure2.png", Resolution=600)
-
-exportgraphics(t3, "Figure3.png", Resolution=600)
+% 
+% 
+% %% Extra Plots and Data formatting
+% 
+% if isempty(var_el_binary.el_prod) | isempty(el_binary_eff)
+% 
+%     var_el_binary.el_prod = zeros(length(var_rsoc.rsoc_electrolyzer), 1);
+%     el_binary_eff = 0;
+% end
+% 
+% prods = [value(var_util.import), value(var_legacy_diesel.electricity), ...
+% value(var_pv.pv_elec(:, 2)), value(var_ees.ees_dchrg), ...
+% value(var_lees.ees_dchrg), value(var_rees.rees_dchrg), ...
+% value(var_ldg.ldg_elec), value(var_legacy_diesel_binary.electricity), ...
+% value(var_lbot.lbot_elec), value(var_run_of_river.electricity), ...
+% value(var_pem.elec), value(var_ror_integer.elec(:, 1)), ...
+% value(var_wave.electricity), value(var_rsoc.rsoc_fuel_cell)];
+% 
+% consums = [value(var_util.gen_export+ var_hrs.hrs_supply.*hrs_chrg_eff + var_dump.elec_dump+elec), value(var_ees.ees_chrg), value(var_lees.ees_chrg), value(var_vc.generic_cool./4), ...
+% value(var_lvc.lvc_cool.*vc_cop), value(el_binary_eff.*var_el_binary.el_prod), value(el_eff.*var_el.el_prod), value(h2_chrg_eff.*var_h2es.h2es_chrg), ...
+% value(var_rsoc.rsoc_electrolyzer)];
+% 
+% prods_nonempty = sum(prods, 1) ~= 0;
+% consums_nonempty = sum(consums, 1) ~= 0;
+% 
+% prods_legends = ["Imported", "Legacy Diesel", "PV", "EES", "LEES", "REES", "LDG", "Legacy Diesel Binary", "LBOT", "ROR", "PEM", "ROR-INT", "Wave", "RSOC-FC"];
+% 
+% consums_legends = ["Background", "EES", "LEES", "VC", "LVC", "EL_Binary", "EL", "H2_CHRG", "RSOC-E"];
+% 
+% % STANDARD
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figure2 = figure;
+% t2 = tiledlayout(2, 1);
+% 
+% 
+% nexttile
+% 
+% area(prods(:, prods_nonempty))
+% hold on
+% 
+% plot(sum(consums, 2), LineWidth= 1, Color="Black")
+% 
+% title("Energy Generation")
+% p_actual_l = prods_legends(prods_nonempty);
+% legend(p_actual_l)
+% ylabel('Energy Generated [kWh]')
+% xlabel('Time [h]')
+% 
+% hold off
+% 
+% 
+% 
+% nexttile
+% 
+% area(consums(:, consums_nonempty))
+% 
+% hold on
+% 
+% title("Energy Loads");
+% c_actual_l = consums_legends(consums_nonempty);
+% legend(c_actual_l)
+% ylabel('Energy Used [kWh]')
+% xlabel('Time [h]')
+% hold off
+% 
+% fig2 = gca;
+% 
+% 
+% % NORMALIZED
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figure3 = figure;
+% t3 = tiledlayout(2, 1);
+% 
+% nexttile
+% 
+% Norm_prod = zeros(size(prods));
+% Norm_consum = zeros(size(consums));
+% 
+% for i = 1:length(prods)
+%     tot_prod = sum(prods, 2);
+%     Norm_prod(i, :) = prods(i, :)./tot_prod(i);
+% 
+%     tot_consum = sum(consums, 2);
+%     Norm_consum(i, :) = consums(i, :)./tot_consum(i);
+% end
+% 
+% area(Norm_prod)
+% 
+% hold on
+% 
+% title("Energy Production -- Percentage")
+% p_actual_l = prods_legends(prods_nonempty);
+% legend(p_actual_l)
+% ylabel('Proportion')
+% xlabel('Time [h]')
+% 
+% 
+% hold off
+% 
+% nexttile
+% 
+% area(Norm_consum)
+% 
+% hold on
+% 
+% title("Energy Consumption - Percentage");
+% c_actual_l = consums_legends(consums_nonempty);
+% legend(c_actual_l)
+% ylabel('Proportion')
+% xlabel('Time [h]')
+% hold off
+% 
+% fig3 = gca;
+% 
+% 
+% 
+% % exportgraphics(t2, "ADJ_Total_Prod.png", Resolution=600)
+% % 
+% % exportgraphics(t3, "ADJ_Prop_Prod.png", Resolution=600)
+% 
+% %% H2 SOC
+% 
+% figure
+% 
+% area(value(var_h2es.h2es_soc))
+% 
+% hold on
+% 
+% title("H2-State of Charge")
+% 
+% ylabel('State of Charge [kWh]')
+% xlabel('Time [h]')
+% 
+% hold off
+% 
+% fig4 = gca;
+% % 
+% % exportgraphics(fig4, "ADJ_SOC.png", Resolution = 600)

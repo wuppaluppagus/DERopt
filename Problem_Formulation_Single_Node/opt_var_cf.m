@@ -100,21 +100,24 @@ if rsoc_on
     var_rsoc.rsoc_fc_onoff = binvar(T, size(rsoc_v, 2), 'full');
     var_rsoc.rsoc_e_onoff = binvar(T, size(rsoc_v, 2), 'full');
     var_rsoc.e_start = binvar(T, size(rsoc_v, 2), 'full');
+    var_rsoc.objective = sdpvar(1, 1);
 
     % Fuel_Cell_OaM = .5*rsoc_monthly_debt;
     % Electrolyzer_OaM = Fuel_Cell_OaM;
-    start_cost = 50;
+    start_cost = 10;
 
+
+    %%% Quadratic objective
     Objective = Objective ...
-    + sum(M*(rsoc_monthly_debt).*4*var_rsoc.rsoc_capacity) + sum(rsoc_v(4)*(var_rsoc.rsoc_fuel_cell+var_rsoc.rsoc_electrolyzer))+start_cost*sum(var_rsoc.e_start);
+    + sum(M*(rsoc_monthly_debt).*4*var_rsoc.rsoc_capacity) + sum(rsoc_v(4)*(var_rsoc.rsoc_fuel_cell+var_rsoc.rsoc_electrolyzer))+start_cost*sum(var_rsoc.e_start.*var_rsoc.rsoc_capacity);
 
-    % Objective = Objective ...
-    %     + sum(M*(Fuel_Cell_OaM+Electrolyzer_OaM).*4*var_rsoc.rsoc_capacity);
+    
+% %%% Linear Objective
+% Objective = Objective ...
+%     + sum(M*(rsoc_monthly_debt).*4*var_rsoc.rsoc_capacity) + sum(rsoc_v(4)*(var_rsoc.rsoc_fuel_cell+var_rsoc.rsoc_electrolyzer))+start_cost*sum(var_rsoc.e_start);
 
 
-
-    % start_cost*(sum(var_rsoc.rsoc_fc_onoff)+sum(var_rsoc.rsoc_e_onoff))
-    % +start_cost*sum(var_rsoc.e_start)
+var_rsoc.objective == Objective;
 end
 %% Solar PV
 if pv_on 

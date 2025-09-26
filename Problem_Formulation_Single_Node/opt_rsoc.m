@@ -8,10 +8,10 @@ Constraints = [Constraints
     (var_rsoc.rsoc_fuel_cell/rsoc_v(8) + var_rsoc.rsoc_electrolyzer/rsoc_v(9) <= rsoc_v(7)*var_rsoc.rsoc_capacity): 'RSOC Current Density Balance'
     
     (var_rsoc.rsoc_fuel_cell <= max(elec)*var_rsoc.rsoc_fc_onoff): 'Fuel Cell Contraint'
-    (.9*rsoc_v(8)*rsoc_v(7)*var_rsoc.rsoc_capacity - max(elec)*(1-var_rsoc.rsoc_fc_onoff) <= var_rsoc.rsoc_fuel_cell): 'Fuel Cell Constraint'
+    (.5*rsoc_v(8)*rsoc_v(7)*var_rsoc.rsoc_capacity - max(elec)*(1-var_rsoc.rsoc_fc_onoff) <= var_rsoc.rsoc_fuel_cell): 'Fuel Cell Constraint'
     
     (var_rsoc.rsoc_electrolyzer<= max(elec)*(var_rsoc.rsoc_e_onoff)): 'Electrolyzer Contraint'
-    (.2*rsoc_v(9)*rsoc_v(7)*var_rsoc.rsoc_capacity - max(elec)*(1-var_rsoc.rsoc_e_onoff) <= var_rsoc.rsoc_electrolyzer): 'Electrolyzer Constraint'
+    (.5*rsoc_v(9)*rsoc_v(7)*var_rsoc.rsoc_capacity - max(elec)*(1-var_rsoc.rsoc_e_onoff) <= var_rsoc.rsoc_electrolyzer): 'Electrolyzer Constraint'
     
     (var_rsoc.rsoc_fc_onoff + var_rsoc.rsoc_e_onoff <=1): 'Onoff constraint'
 
@@ -26,6 +26,8 @@ Constraints = [Constraints
     % 
 
     ];
+
+    
 
    
     % for i = 2:(T-a)
