@@ -187,7 +187,8 @@ if rsoc_on
     end
 
 
-    
+else
+    rsoc_v = [];
 end
 
 %% Building space

@@ -115,7 +115,9 @@ if rsoc_on
 % %%% Linear Objective
 % Objective = Objective ...
 %     + sum(M*(rsoc_monthly_debt).*4*var_rsoc.rsoc_capacity) + sum(rsoc_v(4)*(var_rsoc.rsoc_fuel_cell+var_rsoc.rsoc_electrolyzer))+start_cost*sum(var_rsoc.e_start);
-
+else
+    var_rsoc.rsoc_fuel_cell = zeros(T,1);
+    var_rsoc.rsoc_electrolyzer = zeros(T,1);
 end
 %% Solar PV
 if pv_on 

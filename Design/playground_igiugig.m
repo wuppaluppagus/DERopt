@@ -1,5 +1,8 @@
 %% Playground file for OVMG Project
  clear all; close all; clc ; started_at = datetime('now'); startsim = tic;
+ %% TDJ Running?
+is_tdj_running_the_model = 0;
+
 %% Parameters
 
 parameter_sweep_onoff = 0;
@@ -31,7 +34,7 @@ lees_on = 0; %Legacy EES
 ltes_on = 0; %Legacy TES
 
 %%% Experimental
-rsoc_on = 1;
+rsoc_on = 0;
 
 lror_on = 0; %Turn on legacy run of river
 ror_area = 200;
@@ -50,26 +53,35 @@ toolittle_storage = 0; %%%Forces EES adoption - 13.5 kWh
 socc = 0; % SOC constraint: for each individual ees and rees, final SOC >= Initial SOC
 
 %% Adding paths
-%%%YALMIP Master Path
-addpath(genpath('C:\Users\typde\Downloads\Lab docs\APEP\Yalmip\YALMIP-master'))
-
-%%%CPLEX Path
-% addpath(genpath('C:\Program Files\IBM\ILOG\CPLEX_Studio128\cplex\matlab\x64_win64')) %rjf path
-% addpath(genpath('C:\Program Files\IBM\ILOG\CPLEX_Studio1263\cplex\matlab\x64_win64')) %cyc path
 
 %%%DERopt paths
-addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Design'))
-addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Input_Data'))
-addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Load_Processing'))
-addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Post_Processing'))
-addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Problem_Formulation_Single_Node'))
-addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Techno_Economic'))
-addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Utilities'))
-addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Igiugig'))
+if is_tdj_running_the_model
+    addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Design'))
+    addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Input_Data'))
+    addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Load_Processing'))
+    addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Post_Processing'))
+    addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Problem_Formulation_Single_Node'))
+    addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Techno_Economic'))
+    addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Utilities'))
+    addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Igiugig'))
+else
+    addpath(genpath('H:\_Tools_\Titus\DERopt\Design'))
+    addpath(genpath('H:\_Tools_\Titus\DERopt\Input_Data'))
+    addpath(genpath('H:\_Tools_\Titus\DERopt\Load_Processing'))
+    addpath(genpath('H:\_Tools_\Titus\DERopt\Post_Processing'))
+    addpath(genpath('H:\_Tools_\Titus\DERopt\Problem_Formulation_Single_Node'))
+    addpath(genpath('H:\_Tools_\Titus\DERopt\Techno_Economic'))
+    addpath(genpath('H:\_Tools_\Titus\DERopt\Utilities'))
+    addpath(genpath('H:\_Tools_\Titus\DERopt\Data'))
+end
 
 %% Loading building demand
 %%%Loading Data
-dt = readtable('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Igiugig\Igiugig\Igiugig_Load_Growth_added_time.csv');
+if is_tdj_running_the_model
+    dt = readtable('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Igiugig\Igiugig\Igiugig_Load_Growth_added_time.csv');
+else
+    dt = readtable('H:\_Tools_\DERopt\Data\Igiugig\Igiugig_Load_Growth_added_time.csv');
+end
 
 time = datenum(dt.Date);
 elec = dt.ElectricDemand_kW_;
