@@ -6,6 +6,12 @@ if rsoc_on
     max_switch = 10;
 
     Constraints = [Constraints
+       ( 0 <= var_rsoc.rsoc_electrolyzer <= 99999):'RSOC Electrolyzer operation > 0'
+    (0 <= var_rsoc.rsoc_capacity):'RSOC Electrolyzer capacity > 0'
+    (0 <= var_rsoc.rsoc_fuel_cell):'RSOC fuel cell operation > 0'
+    (0 <= var_rsoc.rsoc_fc_onoff):'RSOC fuel cell operational state > 0'
+    (0 <= var_rsoc.rsoc_e_onoff):'RSOC Electrolyzer operational state > 0'
+    (0 <= var_rsoc.e_start):'RSOC system start > 0'
         (var_rsoc.rsoc_fuel_cell/rsoc_v(8) + var_rsoc.rsoc_electrolyzer/rsoc_v(9) <= rsoc_v(7)*var_rsoc.rsoc_capacity): 'RSOC Current Density Balance'
 
         (var_rsoc.rsoc_fuel_cell <= max(elec)*var_rsoc.rsoc_fc_onoff): 'Fuel Cell Contraint'

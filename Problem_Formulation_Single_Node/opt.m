@@ -3,7 +3,7 @@ if opt_now==1
     
     % Export Model YALMIP -> CPLEX
     tic
-ops = sdpsettings('solver','gurobi','verbose',1);
+ops = sdpsettings('solver','gurobi','verbose',2);
 ops.gurobi.NonConvex = 2;
 ops.gurobi.TuneTimeLimit = 0;
 ops.gurobi.TimeLimit = 60;
@@ -11,22 +11,22 @@ ops.gurobi.Presolve = 0;
 
 
 
-if isempty(rsoc_v) == 0
+% if isempty(rsoc_v) == 0
 
-    Constraints = [Constraints, 
-    0 <= var_rsoc.rsoc_electrolyzer <= 99999,
-    0 <= var_rsoc.rsoc_capacity <= 99999,
-    0 <= var_rsoc.rsoc_fuel_cell <=99999,
-    0 <= var_rsoc.rsoc_fc_onoff ,
-    0 <= var_rsoc.rsoc_e_onoff ,
-    0 <= var_rsoc.e_start ,
-    ];
+    % Constraints = [Constraints, 
+    % 0 <= var_rsoc.rsoc_electrolyzer <= 99999,
+    % 0 <= var_rsoc.rsoc_capacity <= 99999,
+    % 0 <= var_rsoc.rsoc_fuel_cell <=99999,
+    % 0 <= var_rsoc.rsoc_fc_onoff ,
+    % 0 <= var_rsoc.rsoc_e_onoff ,
+    % 0 <= var_rsoc.e_start ,
+    % ];
 
 
     % var_rsoc.objective == Objective,
 
     % 0 <= var_rsoc.objective <= 1e12
-end
+% end
 
 model = export(Constraints, Objective, ops);
 

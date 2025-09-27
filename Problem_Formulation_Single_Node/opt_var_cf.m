@@ -104,7 +104,7 @@ if rsoc_on
 
     % Fuel_Cell_OaM = .5*rsoc_monthly_debt;
     % Electrolyzer_OaM = Fuel_Cell_OaM;
-    start_cost = 10;
+    start_cost = 1;
 
 
     %%% Quadratic objective

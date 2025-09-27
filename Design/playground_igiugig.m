@@ -34,7 +34,7 @@ lees_on = 0; %Legacy EES
 ltes_on = 0; %Legacy TES
 
 %%% Experimental
-rsoc_on = 0;
+rsoc_on = 1;
 
 lror_on = 0; %Turn on legacy run of river
 ror_area = 200;
