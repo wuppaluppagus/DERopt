@@ -1,5 +1,11 @@
 %% PV Constraints
 if ~isempty(pv_v) || (~isempty(pv_legacy) && sum(pv_legacy(2,:)) > 0)
+    %% If new PV is being sized
+    if ~isempty(pv_v)
+        Constraints = [Constraints
+            (0 <= var_pv.pv_elec):'PV production >= 0'
+            (0 <= var_pv.pv_adopt):'PV Adoption >= 0'];
+    end
     %% PV Energy balance when curtailment is allowed
     if curtail
         Constraints = [Constraints

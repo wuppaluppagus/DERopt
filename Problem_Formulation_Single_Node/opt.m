@@ -20,11 +20,12 @@ if isempty(rsoc_v) == 0
     0 <= var_rsoc.rsoc_fc_onoff ,
     0 <= var_rsoc.rsoc_e_onoff ,
     0 <= var_rsoc.e_start ,
-    
-    var_rsoc.objective == Objective,
-
-    0 <= var_rsoc.objective <= 1e12
     ];
+
+
+    % var_rsoc.objective == Objective,
+
+    % 0 <= var_rsoc.objective <= 1e12
 end
 
 model = export(Constraints, Objective, ops);

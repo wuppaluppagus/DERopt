@@ -4,6 +4,10 @@ if isempty(ees_v) == 0
     for ii = 1:size(ees_v,2)
         %%%SOC Equality / Energy Balance
         Constraints = [Constraints
+            (0 <= var_ees.ees_adopt):'EES Adoptiong >= 0'
+            (0 <= var_ees.ees_chrg):'EES Charging >= 0'
+            (0 <= var_ees.ees_dchrg):'EES Discharging >= 0'
+            (0 <= var_ees.ees_soc):'EES SOC >= 0'
             (var_ees.ees_soc(1,ii) <= var_ees.ees_soc(T,ii)):'Initial EES SOC <= Final SOC'
             (var_ees.ees_soc(2:T,ii) == ees_v(10,ii)*var_ees.ees_soc(1:T-1,ii) + ees_v(8,ii)*var_ees.ees_chrg(2:T,ii)  - (1/ees_v(9,ii))*var_ees.ees_dchrg(2:T,ii)):'EES Balance'  %%%Minus discharging of battery
             (ees_v(4,ii)*var_ees.ees_adopt(ii) <= var_ees.ees_soc(:,ii) <= ees_v(5,ii)*var_ees.ees_adopt(ii)):'EES Min/Max SOC' %%%Min/Max SOC
@@ -14,6 +18,11 @@ if isempty(ees_v) == 0
         if isempty(pv_v) == 0 && rees_on
             %%%SOC Equality / Energy Balance
             Constraints = [Constraints
+                (0 <= var_rees.rees_adopt):'REES Adoptiong >= 0'
+                (0 <= var_rees.rees_chrg):'REES Charging >= 0'
+                (0 <= var_rees.rees_dchrg):'REES Discharging >= 0'
+                (0 <= var_rees.rees_soc):'REES SOC >= 0'
+                (var_rees.rees_dchrg(1,:) == 0):'Initial SOC'
                 (var_rees.rees_soc(1,ii) <= var_rees.rees_soc(T,ii)):'Initial REES SOC <= Final SOC'
                 (var_rees.rees_dchrg_nem(1,ii) == 0):'No REES NEM in 1st time step'
                 (var_rees.rees_soc(2:T,ii) == ees_v(10,ii)*var_rees.rees_soc(1:T-1,ii) + ees_v(8,ii)*var_rees.rees_chrg(2:T,ii)  - (1/ees_v(9,ii))*(var_rees.rees_dchrg(2:T,ii) + var_rees.rees_dchrg_nem(2:T,ii))):'REES Balance'  %%%Minus discharging of battery
