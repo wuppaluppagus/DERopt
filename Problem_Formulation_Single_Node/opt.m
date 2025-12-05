@@ -3,11 +3,11 @@ if opt_now==1
     
     % Export Model YALMIP -> CPLEX
     tic
-ops = sdpsettings('solver','gurobi','verbose',2);
-ops.gurobi.NonConvex = 2;
-ops.gurobi.TuneTimeLimit = 0;
-ops.gurobi.TimeLimit = 60;
-ops.gurobi.Presolve = 0;
+% ops = sdpsettings('solver','gurobi','verbose', 2, 'debug', 1);
+% ops.gurobi.NonConvex = 2;
+% ops.gurobi.TuneTimeLimit = 0;
+% ops.gurobi.TimeLimit = 1000;
+% ops.gurobi.Presolve = 1;
 
 
 
@@ -28,9 +28,7 @@ ops.gurobi.Presolve = 0;
     % 0 <= var_rsoc.objective <= 1e12
 % end
 
-model = export(Constraints, Objective, ops);
-
-sol = optimize(Constraints,Objective,ops)
+% sol = optimize(Constraints,Objective,ops)
 
 % if isempty(pv_v) ==0
 %   Constraints=[Constraints
@@ -63,16 +61,14 @@ sol = optimize(Constraints,Objective,ops)
 % asd
 
 
-    % [model,recoverymodel,diagnostic,internalmodel] = export(Constraints,Objective,sdpsettings('solver','gurobi'));
+    [model,recoverymodel,diagnostic,internalmodel] = export(Constraints,Objective,sdpsettings('solver','gurobi'));
     % [model,recoverymodel,diagnostic,internalmodel] = export(Constraints,Objective);
-    % model.lb(:) = 0;
+    model.lb(:) = 0;
 
-% params.NodeLimit = 30000;
-% params.NodeLimit = 200000;
-% params.OutputFlag = 1;
-% % params.StartNumber = solution.x;
-% solution = gurobi(model,params)
-
+params.NodeLimit = 200000;
+params.OutputFlag = 1;
+% params.StartNumber = solution.x;
+solution = gurobi(model,params)
 
     %%%Setting lower/upper bounds for all variables
     % lb=zeros(size(model.f));
@@ -120,7 +116,7 @@ sol = optimize(Constraints,Objective,ops)
     % assign(recover(recoverymodel.used_variables),x)
 
 
-    % assign(recover(recoverymodel.used_variables),solution.x)
+    assign(recover(recoverymodel.used_variables),solution.x)
 end
 %% Optimize thru YALMIP
 if opt_now_yalmip==1  

@@ -102,16 +102,31 @@ if rsoc_on
     var_rsoc.e_start = binvar(T, size(rsoc_v, 2), 'full');
     var_rsoc.objective = sdpvar(T, 1);
 
+    
+
     % Fuel_Cell_OaM = .5*rsoc_monthly_debt;
     % Electrolyzer_OaM = Fuel_Cell_OaM;
-    start_cost = 1;
+    if parameter_sweep_onoff
+        start_cost = cost;
+    else
+
+        start_cost = 1;
+    end
 
 
     %%% Quadratic objective
     Objective = Objective ...
     + sum(M*(rsoc_monthly_debt).*4*var_rsoc.rsoc_capacity) + sum(rsoc_v(4)*(var_rsoc.rsoc_fuel_cell+var_rsoc.rsoc_electrolyzer))+start_cost*sum(var_rsoc.e_start.*var_rsoc.rsoc_capacity);
-
     
+    if Esmerelda_run
+        
+        Constraints = [Constraints
+            
+        (var_rsoc.rsoc_electrolyzer >= 5400): 'Min E Capacity'
+        (sum(var_rsoc.rsoc_electrolyzer) >= 317000): 'Min Prod Value'
+
+        ];
+    end
 % %%% Linear Objective
 % Objective = Objective ...
 %     + sum(M*(rsoc_monthly_debt).*4*var_rsoc.rsoc_capacity) + sum(rsoc_v(4)*(var_rsoc.rsoc_fuel_cell+var_rsoc.rsoc_electrolyzer))+start_cost*sum(var_rsoc.e_start);
@@ -121,6 +136,9 @@ else
 end
 %% Solar PV
 if pv_on 
+
+    
+
     
     %%%PV Generation to meet building demand (kWh)
     var_pv.pv_elec = sdpvar(T,size(pv_v,2),'full'); %%% PV Production sent to the building
@@ -164,6 +182,15 @@ if pv_on
         var_rees.rees_dchrg=zeros(T,1);
         var_rees.rees_soc=zeros(T,1);
     end
+
+    if Esmerelda_run == 1
+
+        Constraints = [Constraints
+            (var_pv.pv_adopt <= 13*10^3): 'Max Capacity < 13 MWh'
+            
+            
+            ];
+    end
     
 else
     var_pv.pv_adopt=zeros([1 1]);
@@ -172,6 +199,8 @@ else
     var_rees.rees_chrg=zeros(T,1);
     var_rees.rees_dchrg=zeros(T,1);
     var_rees.rees_soc=zeros(T,1);
+
+  
 end
 %% Electrical Energy Storage
 if isempty(ees_v) == 0

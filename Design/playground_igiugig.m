@@ -1,7 +1,9 @@
 %% Playground file for OVMG Project
- clear all; close all; clc ; started_at = datetime('now'); startsim = tic;
+ % clear all; close all; clc ; 
+ started_at = datetime('now'); startsim = tic;
  %% TDJ Running?
-is_tdj_running_the_model = 0;
+is_tdj_running_the_model = 1;
+Esmerelda_run = 0;
 
 %% Parameters
 
@@ -16,7 +18,7 @@ elec_dump = []; %%%Variable to "dump" electricity
 %% Diesel Only Toggles
 utility_exists=[]; %% Utility access
 pv_on = 1;        %Turn on PV
-ees_on = 0;       %Turn on EES/REES
+ees_on = 1;       %Turn on EES/REES
 rees_on = 0;  %Turn on REES
 ror_on = 0; % Turn On Run of river generator
 ror_integer_on = 1;
@@ -90,7 +92,7 @@ cool = [];
 
 %%% Formatting Building Data
 %%%Values to filter data by
-month_idx = [1, 2, 3, 4, 5];
+month_idx = [];
 
 % month_idx=[];
 

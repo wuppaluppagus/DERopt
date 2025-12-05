@@ -183,9 +183,14 @@ if rsoc_on
 
         disp(rsoc_v)
     else
-        rsoc_v = [max_output, .43, .742, .01, 5300, .9, .4, 0.75, 1.3, .8]';
+        rsoc_v = [max_output, .43, .742, .01, 1000, .9, .4, 0.75, 1.3, .8]';
+   
     end
 
+    if Esmerelda_run == 1
+        rsoc_v = [max_output, .43, .742, .01, 1000, .9, .4, 0.0001, 1.3, .5]';
+    end
+%5300
 
 else
     rsoc_v = [];
