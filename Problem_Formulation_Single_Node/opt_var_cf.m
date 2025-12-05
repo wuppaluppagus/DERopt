@@ -116,18 +116,15 @@ if rsoc_on
 
     %%% Quadratic objective
     Objective = Objective ...
-    + sum(M*(rsoc_monthly_debt).*4*var_rsoc.rsoc_capacity) + sum(rsoc_v(4)*(var_rsoc.rsoc_fuel_cell+var_rsoc.rsoc_electrolyzer))+start_cost*sum(var_rsoc.e_start.*var_rsoc.rsoc_capacity);
+    + sum(M*(rsoc_monthly_debt).*4*var_rsoc.rsoc_capacity) + sum(rsoc_v(4)*(var_rsoc.rsoc_fuel_cell+var_rsoc.rsoc_electrolyzer))+start_cost*sum(var_rsoc.e_start);
     
     if Esmerelda_run
-        
-        Constraints = [Constraints
-            
-        (var_rsoc.rsoc_electrolyzer >= 5400): 'Min E Capacity'
-        (sum(var_rsoc.rsoc_electrolyzer) >= 317000): 'Min Prod Value'
 
-        ];
+        Constraints = [Constraints
+            (var_rsoc.rsoc_electrolyzer >= 5400): 'Min E Capacity'
+            (sum(var_rsoc.rsoc_electrolyzer) >= 317000): 'Min Prod Value'];
     end
-% %%% Linear Objective
+    % %%% Linear Objective
 % Objective = Objective ...
 %     + sum(M*(rsoc_monthly_debt).*4*var_rsoc.rsoc_capacity) + sum(rsoc_v(4)*(var_rsoc.rsoc_fuel_cell+var_rsoc.rsoc_electrolyzer))+start_cost*sum(var_rsoc.e_start);
 else

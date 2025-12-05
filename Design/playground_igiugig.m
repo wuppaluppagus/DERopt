@@ -2,7 +2,7 @@
  % clear all; close all; clc ; 
  started_at = datetime('now'); startsim = tic;
  %% TDJ Running?
-is_tdj_running_the_model = 1;
+is_tdj_running_the_model = 0;
 Esmerelda_run = 0;
 
 %% Parameters
@@ -67,8 +67,9 @@ if is_tdj_running_the_model
     addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Utilities'))
     addpath(genpath('C:\Users\typde\Downloads\Lab\DERopt\DERopt\Igiugig'))
 else
+    addpath(genpath('H:\Matlab_Funcitons\YALMIP-master')) %rjf path
     addpath(genpath('H:\_Tools_\Titus\DERopt\Design'))
-    addpath(genpath('H:\_Tools_\Titus\DERopt\Input_Data'))
+    addpath(genpath('H:\_Tools_\DERopt\Data'))
     addpath(genpath('H:\_Tools_\Titus\DERopt\Load_Processing'))
     addpath(genpath('H:\_Tools_\Titus\DERopt\Post_Processing'))
     addpath(genpath('H:\_Tools_\Titus\DERopt\Problem_Formulation_Single_Node'))
