@@ -28,14 +28,14 @@ params_swept = [max_output, fuel_cell_eff, elec_cell_eff, OaM, Capital, Ramp_rat
 
 %% Sweep Parameters
 
-param_1 = linspace(0, 100,10);
+param_1 = linspace(10, 100,2);
 % 
 % Param_2= linspace(1.5, 3,10);
 % 
 % [X, Y] = meshgrid(Param_1, Param_2);
 
 
-capacity_storage = 1:numel(param_1);
+capacity_storage = zeros(1, numel(param_1));
 %% Data Table Creation
 
 for i = 1:numel(param_1)
@@ -49,4 +49,4 @@ for i = 1:numel(param_1)
     capacity_storage(i) = value(var_rsoc.rsoc_capacity);
 end
 
-plot(1:length(Data_Storage(i, :)), Data_Storage)
+plot(1:length(capacity_storage(i, :)), capacity_storage)

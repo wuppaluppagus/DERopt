@@ -110,7 +110,7 @@ if rsoc_on
         start_cost = cost;
     else
 
-        start_cost = 1;
+        start_cost = .05*rsoc_v(5);
     end
 
 

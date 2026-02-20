@@ -2,7 +2,7 @@
  % clear all; close all; clc ; 
  started_at = datetime('now'); startsim = tic;
  %% TDJ Running?
-is_tdj_running_the_model = 0;
+is_tdj_running_the_model = 1;
 Esmerelda_run = 0;
 
 %% Parameters
