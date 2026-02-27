@@ -107,7 +107,7 @@ if rsoc_on
     % Fuel_Cell_OaM = .5*rsoc_monthly_debt;
     % Electrolyzer_OaM = Fuel_Cell_OaM;
     if parameter_sweep_onoff
-        start_cost = cost;
+        start_cost = cost*rsoc_v(5);
     else
 
         start_cost = .05*rsoc_v(5);

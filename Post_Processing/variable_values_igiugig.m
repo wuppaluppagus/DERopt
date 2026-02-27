@@ -61,5 +61,13 @@ if exist('ror_integer_on') && ror_integer_on
     var_ror_integer.elec = value(var_ror_integer.elec);
 end
 
+var_rsoc.rsoc_electrolyzer = value(var_rsoc.rsoc_electrolyzer);
+var_rsoc.rsoc_capacity = value(var_rsoc.rsoc_capacity);
+var_rsoc.rsoc_fuel_cell = value(var_rsoc.rsoc_fuel_cell);
+var_rsoc.rsoc_fc_onoff = value(var_rsoc.rsoc_fc_onoff);
+var_rsoc.rsoc_e_onoff = value(var_rsoc.rsoc_e_onoff);
+var_rsoc.e_start = value(var_rsoc.e_start);
+var_rsoc.objective = value(var_rsoc.objective);
+
 %% Dump variables
 var_dump.elec_dump = value(var_dump.elec_dump);
